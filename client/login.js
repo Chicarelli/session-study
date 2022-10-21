@@ -41,3 +41,20 @@ function cleanPassword() {
   senha = '';
   document.getElementById('password_input').value = '';
 }
+
+function executeLogin() {
+  fetch('/session/logar', {
+    method: 'POST',
+    body: JSON.stringify({ positions: senha }),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      if (data.error) {
+        return alert(data.message);
+      }
+      alert('Usuário logado, sessão limpa');
+    });
+}
