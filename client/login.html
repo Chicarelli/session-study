@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="./login.js"></script>
+    <title>TECLADO VIRTUAL</title>
+</head>
+<body>
+   <div class="w-75 d-flex justify-content-center align-items-center p-5 m-auto">
+
+        <div class="border p-5 w-100 bg-primary rounded d-flex flex-wrap gap-2" >
+            <div class="w-100 d-flex align-items-start">
+                <input type="text" class="form-control mx-1 mr-3 h-100" id="password_input" disabled>
+                <button onclick="cleanPassword()" class="btn btn-danger">Limpar senha</button>
+            </div>
+            <div id="keypad_content" class="d-flex w-100 justify-content-start mt-3 flex-wrap">
+            </div>
+        </div>
+   </div>
+</body>
+</html>

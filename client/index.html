@@ -5,16 +5,40 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <script src="./index.js"></script>
-    <title>Document</title>
+    <title>ACESSAR</title>
 </head>
 <body>
-    Hello world!
+    <form class="pt-5" id="user-info">
+        <div class="d-flex flex-column aling-center justify-center w-50 m-auto p-2 border">
+            
+            <label for="username">Usuário</label>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" placeholder="Username" id="username"/>
+            </div>
 
-    <button class="btn btn-info" onclick="setSession()">Set user ID</button>
-    <br/>
-    <button class="btn btn-info" onclick="getSession()">Get user ID</button>
-    <br/>
-    <button class="btn btn-info" onclick="deleteSession()">Delete user ID</button>
+            <label for="account">Conta</label>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" placeholder="Conta" id="account">
+            </div>
+
+            <label for="agency">Agência</label>
+            <div class="input-group mb-3">
+                <select class="form-control" id="agency">
+                    <option value="1" selected>1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                </select>
+            </div>
+            
+            <div class="w-100 d-flex justify-content-end">
+                <button type="submit" class="py-2 px-5 btn btn-primary">Acessar</button>
+            </div>
+
+            <!-- <button class="btn btn-primary my-2" onclick="setSession()">Set user ID</button>
+            <button class="btn btn-secondary my-2" onclick="getSession()">Get user ID</button>
+            <button class="btn btn-danger my-2" onclick="deleteSession()">Delete user ID</button> -->
+        </div>
+    </form>
+    <script src="./index.js"></script>
 </body>
 </html>
