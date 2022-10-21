@@ -21,9 +21,12 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@fastify/secure-session": "^5.2.0",
+    "@fastify/static": "^6.5.0",
     "@nestjs/common": "^8.0.0",
     "@nestjs/core": "^8.0.0",
     "@nestjs/platform-express": "^8.0.0",
+    "@nestjs/platform-fastify": "^9.1.4",
     "@nestjs/serve-static": "^3.0.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
