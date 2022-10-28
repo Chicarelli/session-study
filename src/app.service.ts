@@ -1,9 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
+import axios from 'axios';
+import { HttpService } from '@nestjs/axios';
+import { catchError, firstValueFrom, map } from 'rxjs';
+import { stringify } from 'querystring';
+import { response } from 'express';
 
 @Injectable()
 export class AppService {
   private array: string[] = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
   private readonly hardcodedPassword = '1234';
+
+  constructor(private readonly httpService: HttpService) {}
 
   getHello(): string {
     return 'Hello World!';
@@ -29,7 +36,7 @@ export class AppService {
     return teclas;
   }
 
-  executeLogin(user: sessionInfo, positions: string[]): any {
+  async executeLogin(user: sessionInfo, positions: string[]): Promise<any> {
     const generatedKeyboard = user.teclas;
 
     const pressedKeys: string[][] = positions.map(
@@ -38,11 +45,55 @@ export class AppService {
 
     const generatedPossibilities = this.generatePossibilities(pressedKeys);
 
-    if (generatedPossibilities.includes(this.hardcodedPassword)) {
-      return { message: 'Usuário Logado' };
-    }
+    console.log(
+      'Fazer as requests de forma assincrona pra ver se alguma delas é a correta',
+    );
 
-    throw new Error('Usuário não logado');
+    const body = {
+      grant_type: 'password',
+      client_id: 'nodejs-adapter-test',
+      client_secret: 'QygjSIaz6iH4iGzlLZHhHCugSLJjRlMc',
+      password: generatedPossibilities[0],
+      username: 'rafael.chicarelli',
+    };
+
+    const values = [];
+    await Promise.all(
+      generatedPossibilities.map(async (password) => {
+        return this.httpService
+          .post(
+            'http://localhost:8080/auth/realms/Another-realm/protocol/openid-connect/token',
+            stringify({
+              grant_type: 'password',
+              client_id: 'nodejs-adapter-test',
+              client_secret: 'QygjSIaz6iH4iGzlLZHhHCugSLJjRlMc',
+              password: password,
+              username: 'rafael.chicarelli',
+            }),
+            {
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+              },
+            },
+          )
+          .pipe(map((response) => response))
+          .toPromise()
+          .then((value) => {
+            values.push({
+              error: false,
+              access_token: value.data.access_token,
+            });
+          })
+          .catch((error) => {
+            values.push({ error: true });
+          });
+      }),
+    );
+
+    const success = values.filter((item) => !item?.error);
+    console.log(values);
+
+    return { success: success.length > 0 ? true : false, obj: success[0] };
   }
 
   private generatePossibilities(pressedKeys: string[][]) {
@@ -50,7 +101,7 @@ export class AppService {
     for (let firstPosition = 0; firstPosition <= 1; firstPosition++) {
       for (let secondPosition = 0; secondPosition <= 1; secondPosition++) {
         for (let thirdPosition = 0; thirdPosition <= 1; thirdPosition++) {
-          for (let fourthPosition = 0; fourthPosition <= 0; fourthPosition++) {
+          for (let fourthPosition = 0; fourthPosition <= 1; fourthPosition++) {
             const firstNumber = pressedKeys[0][firstPosition];
             const secondNumber = pressedKeys[1][secondPosition];
             const thirdNumber = pressedKeys[2][thirdPosition];
@@ -63,7 +114,6 @@ export class AppService {
         }
       }
     }
-
     return possibilities;
   }
 }

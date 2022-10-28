@@ -43,14 +43,14 @@ export class AppController {
   }
 
   @Post('/session/logar')
-  login(@Req() request, @Body() body: LogarDTO, @Res() response) {
+  async login(@Req() request, @Body() body: LogarDTO, @Res() response) {
     try {
       const positions: string[] = body.positions.split('');
       const user: sessionInfo = request.session.get('userData');
-      const result = this.appService.executeLogin(user, positions);
-      request.session.delete();
+      const result = await this.appService.executeLogin(user, positions);
       return response.status(200).send(result);
     } catch (error) {
+      console.log('deu ruim', error);
       return response.status(400).send({ message: error.message, error: true });
     }
   }

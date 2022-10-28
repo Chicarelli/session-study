@@ -55,6 +55,5 @@ function executeLogin() {
       if (data.error) {
         return alert(data.message);
       }
-      alert('Usuário logado, sessão limpa');
     });
 }
