@@ -1,14 +1,11 @@
-import { HttpException, Injectable } from '@nestjs/common';
-import axios from 'axios';
+import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
-import { catchError, firstValueFrom, map } from 'rxjs';
+import { map } from 'rxjs';
 import { stringify } from 'querystring';
-import { response } from 'express';
 
 @Injectable()
 export class AppService {
   private array: string[] = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-  private readonly hardcodedPassword = '1234';
 
   constructor(private readonly httpService: HttpService) {}
 
@@ -45,31 +42,13 @@ export class AppService {
 
     const generatedPossibilities = this.generatePossibilities(pressedKeys);
 
-    console.log(
-      'Fazer as requests de forma assincrona pra ver se alguma delas é a correta',
-    );
-
-    const body = {
-      grant_type: 'password',
-      client_id: 'nodejs-adapter-test',
-      client_secret: 'QygjSIaz6iH4iGzlLZHhHCugSLJjRlMc',
-      password: generatedPossibilities[0],
-      username: 'rafael.chicarelli',
-    };
-
     const values = [];
     await Promise.all(
       generatedPossibilities.map(async (password) => {
         return this.httpService
           .post(
-            'http://localhost:8080/auth/realms/Another-realm/protocol/openid-connect/token',
-            stringify({
-              grant_type: 'password',
-              client_id: 'nodejs-adapter-test',
-              client_secret: 'QygjSIaz6iH4iGzlLZHhHCugSLJjRlMc',
-              password: password,
-              username: 'rafael.chicarelli',
-            }),
+            process.env.KEYCLOAK_CLIENT_TOKEN_URL,
+            stringify(this.createBodyLogin(password)),
             {
               headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -116,10 +95,14 @@ export class AppService {
     }
     return possibilities;
   }
-}
 
-/**
- * [ ] - Receber posições de array preenchidas.
- * [ ] - Pegar as teclas da sessão salvas daquele usuário.
- * [ ] - Ver se a genha (1234) bate com as teclas escolhidas, através de geração de possibilidades.
- */
+  private createBodyLogin(password: string): LoginKeycloak {
+    return {
+      password,
+      grant_type: process.env.KEYCLOAK_GRANT_TYPE,
+      client_id: process.env.KEYCLOAK_CLIENT_ID,
+      client_secret: process.env.KEYCLOAK_CLIENT_SECRET,
+      username: 'rafael.chicarelli',
+    };
+  }
+}

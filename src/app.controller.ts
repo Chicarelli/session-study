@@ -7,6 +7,7 @@ export class AppController {
 
   @Post('/session/user-data')
   insertUserData(@Req() request, @Res() response, @Body() user): any {
+    console.log(process.env.KEYCLOAK_GRANT_TYPE);
     if (
       user.username.length === 0 ||
       user.account.length === 0 ||
@@ -21,6 +22,7 @@ export class AppController {
 
   @Get('/session/valid')
   checkValidSession(@Req() request, @Res() response) {
+    console.log(process.env.KEYCLOAK_GRANT_TYPE);
     const sessionUser = request.session.get('userData');
     if (!sessionUser) {
       return response.status(302).redirect('/');
@@ -30,6 +32,7 @@ export class AppController {
 
   @Get('/session/keypad')
   getKeyboard(@Req() request) {
+    console.log(process.env.KEYCLOAK_GRANT_TYPE);
     if (request.session.get('userData')) {
       const teclas = this.appService.gerarTeclas();
 

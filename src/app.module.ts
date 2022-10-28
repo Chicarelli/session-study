@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { join } from 'path';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { HttpModule } from '@nestjs/axios';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { HttpModule } from '@nestjs/axios';
       rootPath: join(__dirname, '..', 'client'),
     }),
     HttpModule,
+    ConfigModule.forRoot(),
   ],
   controllers: [AppController],
   providers: [AppService],
